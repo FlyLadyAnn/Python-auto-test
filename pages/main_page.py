@@ -1,11 +1,13 @@
 from pages.base_page import BasePage
-from pages.locators import MainPageLocators
 
 
 class MainPage(BasePage):
-    def go_to_login_page(self):
-        login_link = self.browser.find_element(*MainPageLocators.LOGIN_LINK)
-        login_link.click()
+    def __init__(self, *args, **kwargs):
+        super(MainPage, self).__init__(*args, **kwargs)
 
-    def should_be_login_link(self):
-        assert self.is_element_present(*MainPageLocators.LOGIN_LINK), "Login link is not presented"
+    def test_guest_cant_see_product_in_basket_opened_from_main_page(self):
+        #  Гость открывает главную страницу
+        #  Переходит в корзину по кнопке в шапке сайта
+        #  Ожидаем, что в корзине нет товаров
+        #  Ожидаем, что есть текст о том что корзина пуста
+        pass

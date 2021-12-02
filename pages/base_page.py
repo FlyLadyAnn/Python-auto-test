@@ -1,5 +1,7 @@
-from selenium.common import exceptions as E
-from selenium.common.exceptions import NoAlertPresentException
+from selenium.common import exceptions as e
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
+from pages.locators import BasePageLocators
 import math
 
 
@@ -9,14 +11,41 @@ class BasePage:
         self.url = url
         self.browser.implicitly_wait(timeout)
 
+    def go_to_login_page(self):
+        link = self.browser.find_element(*BasePageLocators.LOGIN_LINK)
+        link.click()
+
+    def should_be_login_link(self):
+        assert self.is_element_present(*BasePageLocators.LOGIN_LINK), "Login link is not presented"
+
     def open(self):
         self.browser.get(self.url)
 
     def is_element_present(self, how, what):
         try:
             self.browser.find_element(how, what)
-        except E.NoSuchElementException:
+        except e.NoSuchElementException:
             return False
+        return True
+
+    # элемент не появляется на странице в течение заданного времени
+    # упадет, как только увидит искомый элемент. Не появился: успех, тест зеленый.
+    def is_not_element_present(self, how, what, timeout=4):
+        try:
+            WebDriverWait(self.browser, timeout).until(ec.presence_of_element_located((how, what)))
+        except e.TimeoutException:
+            return True
+
+        return False
+
+    # элемент исчезает через какое-то время
+    # будет ждать до тех пор, пока элемент не исчезнет.
+    def is_disappeared(self, how, what, timeout=4):
+        try:
+            WebDriverWait(self.browser, timeout, 1, e.TimeoutException).until_not(ec.presence_of_element_located((how, what)))
+        except e.TimeoutException:
+            return False
+
         return True
 
     def solve_quiz_and_get_code(self):
@@ -32,6 +61,5 @@ class BasePage:
             alert_text = alert.text
             print(f"Your code: {alert_text}")
             alert.accept()
-        except NoAlertPresentException:
+        except e.NoAlertPresentException:
             print("No second alert presented")
-
