@@ -23,10 +23,3 @@ class ProductPage(BasePage):
 
     def should_be_disappeared_success_message(self):
         assert self.is_disappeared(*ProductPageLocators.MESSAGE_WITH_NAME), "Success message is disappeared, but should not be"
-
-    def test_guest_cant_see_product_in_basket_opened_from_product_page(self):
-        # Гость открывает страницу товара
-        # Переходит в корзину по кнопке в шапке
-        # Ожидаем, что в корзине нет товаров
-        # Ожидаем, что есть текст о том что корзина пуста
-        pass
