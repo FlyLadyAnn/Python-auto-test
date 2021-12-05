@@ -1,6 +1,7 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from datetime import datetime
 
 
 # добавлены две опции - имя браузера (Chrome, FireFox) и язык в браузере(en, ru, es, fr ...)
@@ -32,6 +33,8 @@ def browser(request):
             browser = webdriver.Chrome(options=options)
         else:
             browser = webdriver.Chrome()
+
+        browser.maximize_window()
     elif browser_name == "firefox":
         print("\nstart firefox browser for test..")
         if user_language is not None:
@@ -40,8 +43,12 @@ def browser(request):
             browser = webdriver.Firefox(firefox_profile=fp)
         else:
             browser = webdriver.Firefox()
+
+        browser.maximize_window()
     else:
         raise pytest.UsageError("--browser_name should be chrome or firefox")
     yield browser
+    now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    browser.get_screenshot_as_file(f"reports/scr_{now}.png")  # скрин
     print("\nquit browser..")
     browser.quit()
