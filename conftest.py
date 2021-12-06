@@ -48,7 +48,7 @@ def browser(request):
     else:
         raise pytest.UsageError("--browser_name should be chrome or firefox")
     yield browser
-    now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    browser.get_screenshot_as_file(f"reports/scr_{now}.png")  # скрин
+    # now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    # browser.get_screenshot_as_file(f"reports/scr_{now}.png")  # скрин
     print("\nquit browser..")
     browser.quit()
